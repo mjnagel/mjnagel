@@ -1,3 +1,3 @@
-<h3 align="center">
-mjnagel
-</h3>
+<p align="center">
+  <img src="./profile/stats.svg" />
+</p>

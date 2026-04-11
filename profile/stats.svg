@@ -9,7 +9,7 @@
         aria-labelledby="descId"
       >
         <title id="titleId">Micah Nagel's GitHub Stats, Rank: A-</title>
-        <desc id="descId">Total Stars Earned: 27, Total Commits  (last year) : 495, Total PRs: 653, Total PRs Reviewed: 986, Total Issues: 383, Contributed to (last year): 33</desc>
+        <desc id="descId">Total Stars Earned: 27, Total Commits  (last year) : 496, Total PRs: 653, Total PRs Reviewed: 989, Total Issues: 383, Contributed to (last year): 33</desc>
         <style>
           .header {
             font: 600 18px 'Segoe UI', Ubuntu, Sans-Serif;
@@ -73,7 +73,7 @@
         stroke-dashoffset: 251.32741228718345;
       }
       to {
-        stroke-dashoffset: 74.1319667688983;
+        stroke-dashoffset: 74.10256775595963;
       }
     }
   
@@ -177,7 +177,7 @@
         x="219.01"
         y="12.5"
         data-testid="commits"
-      >495</text>
+      >496</text>
     </g>
   </g><g transform="translate(0, 50)">
     <g class="stagger" style="animation-delay: 750ms" transform="translate(25, 0)">
@@ -207,7 +207,7 @@
         x="219.01"
         y="12.5"
         data-testid="reviews"
-      >986</text>
+      >989</text>
     </g>
   </g><g transform="translate(0, 100)">
     <g class="stagger" style="animation-delay: 1050ms" transform="translate(25, 0)">

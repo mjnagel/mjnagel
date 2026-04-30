@@ -9,7 +9,7 @@
         aria-labelledby="descId"
       >
         <title id="titleId">Micah Nagel's GitHub Stats, Rank: A-</title>
-        <desc id="descId">Total Stars Earned: 26, Total Commits  (last year) : 489, Total PRs: 681, Total PRs Reviewed: 1001, Total Issues: 385, Contributed to (last year): 31</desc>
+        <desc id="descId">Total Stars Earned: 26, Total Commits  (last year) : 489, Total PRs: 681, Total PRs Reviewed: 1002, Total Issues: 385, Contributed to (last year): 31</desc>
         <style>
           .header {
             font: 600 18px 'Segoe UI', Ubuntu, Sans-Serif;

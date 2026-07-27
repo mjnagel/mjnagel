@@ -6,6 +6,7 @@
     ':dependencyDashboard',
     'config:recommended',
     'helpers:pinGitHubActionDigests',
+    'helpers:pinGitHubActionDigestsToSemver'
   ],
   ignorePresets: [
     ':ignoreModulesAndTests',
@@ -20,6 +21,7 @@
       ],
       groupName: 'actions',
       commitMessageTopic: 'actions',
+      minimumReleaseAge: '3 days'
     }
   ]
 }

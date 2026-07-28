@@ -8,8 +8,8 @@
         role="img"
         aria-labelledby="descId"
       >
-        <title id="titleId">Micah Nagel's GitHub Stats, Rank: A-</title>
-        <desc id="descId">Total Stars Earned: 26, Total Commits  (last year) : 368, Total PRs: 703, Total PRs Reviewed: 861, Total Issues: 389, Contributed to (last year): 29</desc>
+        <title id="titleId">Micah Nagel&#39;s GitHub Stats, Rank: A-</title>
+        <desc id="descId">Total Stars Earned: 26, Total Commits  (last year) : 369, Total PRs: 703, Total PRs Reviewed: 864, Total Issues: 389, Contributed to (last year): 29</desc>
         <style>
           .header {
             font: 600 18px 'Segoe UI', Ubuntu, Sans-Serif;
@@ -73,7 +73,7 @@
         stroke-dashoffset: 251.32741228718345;
       }
       to {
-        stroke-dashoffset: 77.97663559350241;
+        stroke-dashoffset: 77.9348279213088;
       }
     }
   
@@ -126,7 +126,7 @@
         y="0"
         class="header"
         data-testid="header"
-      >Micah Nagel's GitHub Stats</text>
+      >Micah Nagel&#39;s GitHub Stats</text>
     </g>
       </g>
     
@@ -177,7 +177,7 @@
         x="224.01"
         y="12.5"
         data-testid="commits"
-      >368</text>
+      >369</text>
     </g>
   </g><g transform="translate(0, 50)">
     <g class="stagger" style="animation-delay: 750ms" transform="translate(25, 0)">
@@ -207,7 +207,7 @@
         x="224.01"
         y="12.5"
         data-testid="reviews"
-      >861</text>
+      >864</text>
     </g>
   </g><g transform="translate(0, 100)">
     <g class="stagger" style="animation-delay: 1050ms" transform="translate(25, 0)">

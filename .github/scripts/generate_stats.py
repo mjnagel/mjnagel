@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Generate the profile stats SVG from GitHub's GraphQL API."""
+"""Generate profile stats SVG from GitHub's GraphQL API."""
 
 from __future__ import annotations
 
@@ -16,11 +16,11 @@ from urllib.request import Request, urlopen
 
 
 GRAPHQL_QUERY = """
-query userInfo($login: String!, $after: String, $startTime: DateTime!, $endTime: DateTime!) {
+query userInfo($login: String!, $after: String, $startTime: DateTime = null) {
   user(login: $login) {
     name
     login
-    commits: contributionsCollection(from: $startTime, to: $endTime) {
+    commits: contributionsCollection(from: $startTime) {
       totalCommitContributions
     }
     reviews: contributionsCollection {
@@ -112,8 +112,11 @@ def graphql_request(endpoint: str, token: str, query: str, variables: dict[str, 
 
     errors = payload.get("errors")
     if errors:
-        message = errors[0].get("message", "unknown GraphQL error")
-        raise RuntimeError(f"GitHub GraphQL request failed: {message}")
+        error = errors[0]
+        message = error.get("message", "unknown GraphQL error")
+        path = error.get("path")
+        location = f" at {'.'.join(str(part) for part in path)}" if path else ""
+        raise RuntimeError(f"GitHub GraphQL request failed{location}: {message}")
 
     user = payload.get("data", {}).get("user")
     if not user:
@@ -123,8 +126,7 @@ def graphql_request(endpoint: str, token: str, query: str, variables: dict[str, 
 
 def fetch_stats(username: str, token: str, endpoint: str) -> dict[str, Any]:
     """Fetch the metrics displayed by the stats card."""
-    end_time = datetime.now(timezone.utc)
-    start_time = end_time - timedelta(days=365)
+    start_time = datetime.now(timezone.utc) - timedelta(days=365)
     user = graphql_request(
         endpoint,
         token,
@@ -133,7 +135,6 @@ def fetch_stats(username: str, token: str, endpoint: str) -> dict[str, Any]:
             "login": username,
             "after": None,
             "startTime": start_time.isoformat().replace("+00:00", "Z"),
-            "endTime": end_time.isoformat().replace("+00:00", "Z"),
         },
     )
 

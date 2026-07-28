@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Generate profile stats SVG from GitHub's GraphQL API."""
+"""Generate the profile stats SVG from GitHub's GraphQL API."""
 
 from __future__ import annotations
 
@@ -41,6 +41,7 @@ query userInfo($login: String!, $after: String, $startTime: DateTime = null) {
     repositories(
       first: 100
       ownerAffiliations: OWNER
+      privacy: PUBLIC
       orderBy: {direction: DESC, field: STARGAZERS}
       after: $after
     ) {
@@ -66,6 +67,7 @@ query userRepositories($login: String!, $after: String) {
     repositories(
       first: 100
       ownerAffiliations: OWNER
+      privacy: PUBLIC
       orderBy: {direction: DESC, field: STARGAZERS}
       after: $after
     ) {

@@ -12,11 +12,12 @@ import sys
 import tempfile
 from typing import Any
 from urllib.error import HTTPError, URLError
+from urllib.parse import quote, urlencode
 from urllib.request import Request, urlopen
 
 
 GRAPHQL_QUERY = """
-query userInfo($login: String!, $after: String, $startTime: DateTime = null) {
+query userInfo($login: String!, $startTime: DateTime = null) {
   user(login: $login) {
     name
     login
@@ -37,50 +38,6 @@ query userInfo($login: String!, $after: String, $startTime: DateTime = null) {
     }
     closedIssues: issues(states: CLOSED) {
       totalCount
-    }
-    repositories(
-      first: 100
-      ownerAffiliations: OWNER
-      privacy: PUBLIC
-      orderBy: {direction: DESC, field: STARGAZERS}
-      after: $after
-    ) {
-      totalCount
-      nodes {
-        name
-        stargazers {
-          totalCount
-        }
-      }
-      pageInfo {
-        hasNextPage
-        endCursor
-      }
-    }
-  }
-}
-"""
-
-REPOSITORIES_QUERY = """
-query userRepositories($login: String!, $after: String) {
-  user(login: $login) {
-    repositories(
-      first: 100
-      ownerAffiliations: OWNER
-      privacy: PUBLIC
-      orderBy: {direction: DESC, field: STARGAZERS}
-      after: $after
-    ) {
-      nodes {
-        name
-        stargazers {
-          totalCount
-        }
-      }
-      pageInfo {
-        hasNextPage
-        endCursor
-      }
     }
   }
 }
@@ -126,7 +83,41 @@ def graphql_request(endpoint: str, token: str, query: str, variables: dict[str, 
     return user
 
 
-def fetch_stats(username: str, token: str, endpoint: str) -> dict[str, Any]:
+def fetch_public_stars(username: str, token: str, api_url: str) -> int:
+    """Return the stars across all publicly visible repositories owned by a user."""
+    stars = 0
+    page = 1
+    while True:
+        query = urlencode({"type": "owner", "per_page": 100, "page": page})
+        endpoint = f"{api_url}/users/{quote(username, safe='')}/repos?{query}"
+        request = Request(
+            endpoint,
+            headers={
+                "Accept": "application/vnd.github+json",
+                "Authorization": f"bearer {token}",
+                "User-Agent": "profile-stats-generator",
+            },
+        )
+        try:
+            with urlopen(request, timeout=30) as response:
+                repositories = json.load(response)
+        except HTTPError as error:
+            raise RuntimeError(f"GitHub repositories request failed with HTTP {error.code}") from error
+        except URLError as error:
+            raise RuntimeError(f"GitHub repositories request failed: {error.reason}") from error
+
+        if not isinstance(repositories, list):
+            message = repositories.get("message", "unexpected response")
+            raise RuntimeError(f"GitHub repositories request failed: {message}")
+
+        public_repositories = [repository for repository in repositories if not repository["private"]]
+        stars += sum(repository["stargazers_count"] for repository in public_repositories)
+        if len(repositories) < 100:
+            return stars
+        page += 1
+
+
+def fetch_stats(username: str, token: str, endpoint: str, api_url: str) -> dict[str, Any]:
     """Fetch the metrics displayed by the stats card."""
     start_time = datetime.now(timezone.utc) - timedelta(days=365)
     user = graphql_request(
@@ -135,27 +126,14 @@ def fetch_stats(username: str, token: str, endpoint: str) -> dict[str, Any]:
         GRAPHQL_QUERY,
         {
             "login": username,
-            "after": None,
             "startTime": start_time.isoformat().replace("+00:00", "Z"),
         },
     )
 
-    repositories = user["repositories"]
-    total_stars = sum(repository["stargazers"]["totalCount"] for repository in repositories["nodes"])
-
-    while repositories["pageInfo"]["hasNextPage"]:
-        repositories = graphql_request(
-            endpoint,
-            token,
-            REPOSITORIES_QUERY,
-            {"login": username, "after": repositories["pageInfo"]["endCursor"]},
-        )["repositories"]
-        total_stars += sum(repository["stargazers"]["totalCount"] for repository in repositories["nodes"])
-
     total_issues = user["openIssues"]["totalCount"] + user["closedIssues"]["totalCount"]
     return {
         "name": user["name"] or user["login"],
-        "stars": total_stars,
+        "stars": fetch_public_stars(username, token, api_url),
         "commits": user["commits"]["totalCommitContributions"],
         "prs": user["pullRequests"]["totalCount"],
         "reviews": user["reviews"]["totalPullRequestReviewContributions"],
@@ -306,7 +284,7 @@ def main() -> int:
     api_url = os.environ.get("GITHUB_API_URL", "https://api.github.com").rstrip("/")
     endpoint = os.environ.get("GITHUB_GRAPHQL_URL", f"{api_url}/graphql")
     try:
-        stats = fetch_stats(username, token, endpoint)
+        stats = fetch_stats(username, token, endpoint, api_url)
         write_card(render_card(stats))
     except (OSError, RuntimeError, StopIteration) as error:
         print(f"failed to generate stats card: {error}", file=sys.stderr)

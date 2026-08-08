@@ -8,7 +8,7 @@
   aria-labelledby="descId"
 >
   <title id="titleId">Micah Nagel's GitHub Stats</title>
-  <desc id="descId">Total Stars Earned: 26, Total Commits  (last year) : 355, Total PRs: 710, Total PRs Reviewed: 881, Total Issues: 390, Contributed to: 30</desc>
+  <desc id="descId">Total Stars Earned: 26, Total Commits  (last year) : 355, Total PRs: 710, Total PRs Reviewed: 881, Total Issues: 391, Contributed to: 30</desc>
   <style>
     .header {
       font: 600 18px 'Segoe UI', Ubuntu, Sans-Serif;
@@ -87,7 +87,7 @@
             <path fill-rule="evenodd" d="M8 1.5a6.5 6.5 0 100 13 6.5 6.5 0 000-13zM0 8a8 8 0 1116 0A8 8 0 010 8zm9 3a1 1 0 11-2 0 1 1 0 012 0zm-.25-6.25a.75.75 0 00-1.5 0v3.5a.75.75 0 001.5 0v-3.5z"/>
           </svg>
           <text class="stat bold" x="25" y="12.5">Total Issues:</text>
-          <text class="stat bold" x="224.01" y="12.5" data-testid="issues">390</text>
+          <text class="stat bold" x="224.01" y="12.5" data-testid="issues">391</text>
         </g>
       </g>
       <g transform="translate(0, 125)">
